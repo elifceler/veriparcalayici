@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace ödev
 
     {
         private static string testData = "value1,value2,value3,value4,value5";
+        private static int fileCount = 0;
+        private static String saveDirectory = @""; //dosya yolunu gir
         public Form1()
         {
             InitializeComponent();
@@ -34,26 +37,19 @@ namespace ödev
         private void buttonSave_Click(object sender, EventArgs e)
         {
             string[] values = textBoxInput.Text.Split(',');
-
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Sheet1");
                 for (int i = 0; i < values.Length; i++)
                 {
-                    worksheet.Cell(i + 1, 1).Value = values[i];
+                    worksheet.Cell(1, i + 1).Value = values[i];
                 }
 
-                SaveFileDialog saveFileDialog = new SaveFileDialog
-                {
-                    Filter = "Excel Files|*.xlsx",
-                    Title = "Save an Excel File"
-                };
+                fileCount++;
+                string fileName = Path.Combine(saveDirectory, $"file{fileCount}.xlsx");
 
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    workbook.SaveAs(saveFileDialog.FileName);
-                    MessageBox.Show("File saved successfully!");
-                }
+                workbook.SaveAs(fileName);
+                MessageBox.Show("File saved successfully!");
             }
         }
     }
